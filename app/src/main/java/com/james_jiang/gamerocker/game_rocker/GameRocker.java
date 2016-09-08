@@ -4,7 +4,6 @@ import android.annotation.TargetApi;
 import android.content.Context;
 import android.os.Build;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -31,7 +30,8 @@ public class GameRocker extends RelativeLayout
     private int originTop;
     private float xDistance;
     private float yDistance;
-    private LayoutParams params;
+    private RelativeLayout.LayoutParams params;
+    private final static int DIVIDE = 15;
 
     public GameRocker(Context context) {
         super(context);
@@ -79,7 +79,7 @@ public class GameRocker extends RelativeLayout
         if(change && !loadOnce){
             rocker.setImageResource(R.drawable.circle_button);
             background.setImageResource(R.drawable.circle_background);
-            params = (LayoutParams) rocker.getLayoutParams();
+            params = (RelativeLayout.LayoutParams) rocker.getLayoutParams();
             loadOnce = true;
             originTop = rocker.getTop();
             originLeft = rocker.getLeft();
@@ -96,8 +96,6 @@ public class GameRocker extends RelativeLayout
             case MotionEvent.ACTION_DOWN:
                 xDown = event.getRawX();
                 yDown = event.getRawY();
-                Log.e(TAG, "x = " + event.getRawX() +", y = " + event.getRawY());
-                Log.e(TAG, "x1 = " + event.getX() +", y1 = " + event.getY());
                 break;
             case MotionEvent.ACTION_MOVE:
                 float distanceX = event.getRawX() - xDown;
@@ -123,8 +121,22 @@ public class GameRocker extends RelativeLayout
                 }
                 break;
             case MotionEvent.ACTION_UP:
-                params.setMargins(originLeft, originTop, 0, 0);
-                rocker.setLayoutParams(params);
+                float divideX = xDistance / DIVIDE;
+                float divideY = yDistance / DIVIDE;
+                for (int i = 0; i < DIVIDE; i++) {
+                    xDistance = xDistance - divideX;
+                    yDistance = yDistance - divideY;
+                    if(i == DIVIDE - 1) {
+                        xDistance = 0.0f;
+                        yDistance = 0.0f;
+                    }
+                    params.setMargins((int) xDistance + originLeft,
+                            (int) yDistance + originTop, 0, 0);
+                    rocker.setLayoutParams(params);
+                    if (listener != null) {
+                        listener.onDirection(xDistance, yDistance);
+                    }
+                }
                 break;
         }
         return false;
