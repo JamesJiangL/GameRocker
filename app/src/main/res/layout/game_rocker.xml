@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="200dp"
+    android:layout_height="200dp">
+    <ImageView
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        android:src="@drawable/circle_background"
+        android:layout_centerInParent="true"
+        android:id="@+id/background"/>
+    <!--不能在需要移动的控件上使用 layout_centerInParent 等定位属性-->
+    <ImageView
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:src="@drawable/circle_button"
+        android:layout_marginTop="60dp"
+        android:layout_marginLeft="60dp"
+        android:id="@+id/rocker"
+        android:clickable="true"/>
+</RelativeLayout>
